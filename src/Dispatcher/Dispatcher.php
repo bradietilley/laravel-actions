@@ -9,6 +9,7 @@ use BradieTilley\Actions\Events\ActionDispatchErrored;
 use BradieTilley\Actions\Events\ActionDispatching;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Facades\Event;
+use SebastianBergmann\Timer\Timer;
 use Throwable;
 
 class Dispatcher implements DispatcherContract
@@ -25,6 +26,9 @@ class Dispatcher implements DispatcherContract
         Event::dispatch(new ActionDispatching($action));
 
         try {
+            $timer = new Timer();
+            $timer->start();
+
             /** @phpstan-ignore-next-line */
             $value = $this->container->call($action->handle(...));
         } catch (Throwable $error) {
@@ -33,7 +37,9 @@ class Dispatcher implements DispatcherContract
             throw $error;
         }
 
-        Event::dispatch(new ActionDispatched($action, $value));
+        $duration = $timer->stop();
+
+        Event::dispatch(new ActionDispatched($action, $value, $duration));
 
         return $value;
     }

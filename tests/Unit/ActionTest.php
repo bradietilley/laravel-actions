@@ -5,11 +5,14 @@ use BradieTilley\Actions\Events\ActionDispatched;
 use BradieTilley\Actions\Events\ActionDispatchErrored;
 use BradieTilley\Actions\Events\ActionDispatching;
 use BradieTilley\Actions\Facade\Action;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Event;
+use SebastianBergmann\Timer\Duration;
 use Tests\Fixtures\ExampleAction;
 use Tests\Fixtures\ExampleActionWithError;
 use Tests\Fixtures\ExampleActionWithFakeHandler;
+use Tests\Fixtures\ExampleActionWithSlowProcess;
 
 // test('an action can be run', function () {
 //     $expect = [
@@ -121,5 +124,21 @@ test('events are fired correctly', function () {
 
     Event::assertDispatched(fn (ActionDispatching $event) => $event->action === $action);
     Event::assertDispatched(fn (ActionDispatchErrored $event) => $event->action === $action);
+});
 
+test('events are timed', function () {
+    $times = Collection::make();
+    Event::listen(fn (ActionDispatched $event) => $times->push($event->duration));
+
+    ExampleAction::dispatch([ 'foo' => 'bar' ]);
+
+    expect($times)->toHaveCount(1);
+    /** @var Collection<int, Duration> $times */
+    expect($times->first()->asMilliseconds())->toBeLessThan(1);
+
+    ExampleActionWithSlowProcess::dispatch([]);
+
+    expect($times)->toHaveCount(2);
+    /** @var Collection<int, Duration> $times */
+    expect($times->last()->asMilliseconds())->toBeGreaterThan(10)->toBeLessThan(15);
 });
