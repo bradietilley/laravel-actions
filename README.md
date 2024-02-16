@@ -1,6 +1,6 @@
 # Laravel Actions
 
-A simple yhet flexible implementation of Actions in Laravel.
+A simple yet flexible implementation of Actions in Laravel.
 
 ![Static Analysis](https://github.com/bradietilley/laravel-actions/actions/workflows/static.yml/badge.svg)
 ![Tests](https://github.com/bradietilley/laravel-actions/actions/workflows/tests.yml/badge.svg)
