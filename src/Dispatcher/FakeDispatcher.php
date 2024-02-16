@@ -3,7 +3,6 @@
 namespace BradieTilley\Actionables\Dispatcher;
 
 use BradieTilley\Actionables\Contracts\Action;
-use BradieTilley\Actionables\Contracts\ActionFake;
 use BradieTilley\Actionables\Dispatcher\Dispatcher as ActualDispatcher;
 use Closure;
 use Illuminate\Contracts\Container\Container;
@@ -100,7 +99,11 @@ class FakeDispatcher extends ActualDispatcher
             return parent::dispatch($action);
         }
 
-        return $action instanceof ActionFake ? $action->handleFake() : null;
+        if (method_exists($action, 'handleFake')) {
+            return $action->handleFake();
+        }
+
+        return null;
     }
 
     /**
