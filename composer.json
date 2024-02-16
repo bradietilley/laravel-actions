@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "BradieTilley\\LaravelActions\\": "src/"
+            "BradieTilley\\Actionables\\": "src/"
         }
     },
     "autoload-dev": {
@@ -22,18 +22,27 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "illuminate/support": "^10.0",
-        "illuminate/container": "^10.0"
+        "illuminate/bus": "^10.0",
+        "illuminate/container": "^10.0",
+        "illuminate/support": "^10.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^6.1.5",
         "laravel/pint": "^1.0",
         "pestphp/pest": "^2.0",
-        "phpstan/phpstan": "^1.8"
+        "phpstan/phpstan": "^1.8",
+        "orchestra/testbench": "^8.21"
     },
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BradieTilley\\Actionables\\Laravel\\ActionServiceProvider"
+            ]
         }
     }
 }
