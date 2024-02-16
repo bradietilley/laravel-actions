@@ -22,6 +22,9 @@ class ActionServiceProvider extends ServiceProvider implements DeferrableProvide
     {
     }
 
+    /**
+     * @return array<int, class-string>
+     */
     public function provides(): array
     {
         return [

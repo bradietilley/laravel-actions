@@ -18,16 +18,22 @@ class FakeDispatcher extends ActualDispatcher
 
     /**
      * List of actions to fake
+     *
+     * @var array<int, class-string|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool)>
      */
     protected array $actionsToFake = [];
 
     /**
      * List of actions to dispatch
+     *
+     * @var array<int, class-string|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool)>
      */
     protected array $actionsToDispatch = [];
 
     /**
      * List of actions that have run this session
+     *
+     * @var array<class-string, array<int, Action>>
      */
     protected array $actions = [];
 
@@ -36,7 +42,10 @@ class FakeDispatcher extends ActualDispatcher
      */
     protected bool $executeActions = false;
 
-    public function __construct(array|string $actionsToFake, Container $container)
+    /**
+     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool)>|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool) $actionsToFake
+     */
+    public function __construct(array|string|Closure $actionsToFake, Container $container)
     {
         parent::__construct($container);
         $this->actionsToFake = Arr::wrap($actionsToFake);
@@ -44,8 +53,10 @@ class FakeDispatcher extends ActualDispatcher
 
     /**
      * Specify the jobs that should be dispatched instead of faked.
+     *
+     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool)>|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool) $actionsToDispatch
      */
-    public function except(array|string $actionsToDispatch): static
+    public function except(array|string|Closure $actionsToDispatch): static
     {
         $this->actionsToDispatch = array_merge($this->actionsToDispatch, Arr::wrap($actionsToDispatch));
 
@@ -117,7 +128,7 @@ class FakeDispatcher extends ActualDispatcher
     /**
      * Determine if a command should be dispatched or not.
      */
-    protected function shouldDispatchCommand(Action $action)
+    protected function shouldDispatchCommand(Action $action): bool
     {
         return Collection::make($this->actionsToDispatch)
             ->filter(function (Closure|string $job) use ($action) {
@@ -135,9 +146,11 @@ class FakeDispatcher extends ActualDispatcher
     {
         if ($command instanceof Closure) {
             [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+            /** @var class-string $command */
+            /** @var Closure $callback */
         }
 
-        if (is_numeric($callback)) {
+        if (is_int($callback)) {
             return $this->assertDispatchedTimes($command, $callback);
         }
 
@@ -158,6 +171,8 @@ class FakeDispatcher extends ActualDispatcher
 
         if ($command instanceof Closure) {
             [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+            /** @var class-string $command */
+            /** @var Closure $callback */
         }
 
         $count = $this->dispatched($command, $callback)->count();
@@ -178,6 +193,8 @@ class FakeDispatcher extends ActualDispatcher
     {
         if ($command instanceof Closure) {
             [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+            /** @var class-string $command */
+            /** @var Closure $callback */
         }
 
         PHPUnit::assertTrue(
