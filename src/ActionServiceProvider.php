@@ -24,6 +24,7 @@ class ActionServiceProvider extends ServiceProvider implements DeferrableProvide
 
     /**
      * @return array<int, class-string>
+     * @codeCoverageIgnore
      */
     public function provides(): array
     {
