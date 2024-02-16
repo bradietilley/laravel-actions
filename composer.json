@@ -41,7 +41,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "BradieTilley\\Actionables\\Laravel\\ActionServiceProvider"
+                "BradieTilley\\Actionables\\ActionServiceProvider"
             ]
         }
     }

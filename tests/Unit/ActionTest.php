@@ -1,7 +1,7 @@
 <?php
 
 use BradieTilley\Actionables\Dispatcher\FakeDispatcher;
-use BradieTilley\Actionables\Laravel\Action;
+use BradieTilley\Actionables\Facade\Action;
 use Illuminate\Support\Facades\Bus;
 use Tests\Fixtures\ExampleAction;
 use Tests\Fixtures\ExampleActionWithFakeHandler;

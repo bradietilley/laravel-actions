@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use BradieTilley\Actionables\Laravel\ActionServiceProvider;
+use BradieTilley\Actionables\ActionServiceProvider;
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
 
 abstract class TestCase extends TestbenchTestCase

@@ -1,6 +1,6 @@
 <?php
 
-namespace BradieTilley\Actionables\Laravel;
+namespace BradieTilley\Actionables;
 
 use BradieTilley\Actionables\Contracts\Dispatcher as DispatcherContract;
 use BradieTilley\Actionables\Dispatcher\Dispatcher;

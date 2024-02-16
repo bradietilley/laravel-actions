@@ -3,7 +3,7 @@
 use BradieTilley\Actionables\Contracts\Dispatcher as ContractsDispatcher;
 use BradieTilley\Actionables\Dispatcher\Dispatcher;
 use BradieTilley\Actionables\Dispatcher\FakeDispatcher;
-use BradieTilley\Actionables\Laravel\Action as Facade;
+use BradieTilley\Actionables\Facade\Action as Facade;
 use Tests\Fixtures\ExampleAction;
 use Tests\Fixtures\ExampleActionA;
 use Tests\Fixtures\ExampleActionB;
