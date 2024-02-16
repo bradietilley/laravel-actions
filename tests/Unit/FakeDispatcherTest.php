@@ -1,6 +1,6 @@
 <?php
 
-use BradieTilley\Actions\Contracts\Action;
+use BradieTilley\Actions\Contracts\Actionable;
 use BradieTilley\Actions\Contracts\Dispatcher as ContractsDispatcher;
 use BradieTilley\Actions\Dispatcher\Dispatcher;
 use BradieTilley\Actions\Dispatcher\FakeDispatcher;
@@ -154,13 +154,13 @@ test('the FakeDispatcher can choose actions to fake and those to run', function 
 test('a FakeDispatcher use a closure to determine if an action should be faked', function () {
     $all = Collection::make();
 
-    $fake = Facade::fake(function (Action $action) use ($all) {
+    $fake = Facade::fake(function (Actionable $action) use ($all) {
         $all->push($action->value);
 
         return $action->value['fake'] === true;
     });
 
-    $shouldRun = fn (Action $action) => invokeProtectedMethod($fake, 'shouldFakeJob', $action);
+    $shouldRun = fn (Actionable $action) => invokeProtectedMethod($fake, 'shouldFakeJob', $action);
 
     expect($shouldRun(new ExampleAction([ 'fake' => true ])))->toBe(true);
     expect($shouldRun(new ExampleAction([ 'fake' => false ])))->toBe(false);
@@ -181,13 +181,13 @@ test('a FakeDispatcher use a closure to determine if an action should be faked',
 test('a FakeDispatcher use a closure to determine if an action should be dispatched', function () {
     $all = Collection::make();
 
-    $fake = Facade::fake()->except(function (Action $action) use ($all) {
+    $fake = Facade::fake()->except(function (Actionable $action) use ($all) {
         $all->push($action->value);
 
         return $action->value['run'] === true;
     });
 
-    $shouldRun = fn (Action $action) => invokeProtectedMethod($fake, 'shouldDispatchCommand', $action);
+    $shouldRun = fn (Actionable $action) => invokeProtectedMethod($fake, 'shouldDispatchCommand', $action);
 
     expect($shouldRun(new ExampleAction([ 'run' => true ])))->toBe(true);
     expect($shouldRun(new ExampleAction([ 'run' => false ])))->toBe(false);

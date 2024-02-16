@@ -2,9 +2,9 @@
 
 namespace BradieTilley\Actions;
 
-use BradieTilley\Actions\Contracts\Action as ContractsAction;
+use BradieTilley\Actions\Contracts\Actionable as ContractsAction;
 
 abstract class Action implements ContractsAction
 {
-    use Actionable;
+    use Dispatchable;
 }

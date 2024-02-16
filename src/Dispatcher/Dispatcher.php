@@ -2,7 +2,7 @@
 
 namespace BradieTilley\Actions\Dispatcher;
 
-use BradieTilley\Actions\Contracts\Action;
+use BradieTilley\Actions\Contracts\Actionable;
 use BradieTilley\Actions\Contracts\Dispatcher as DispatcherContract;
 use BradieTilley\Actions\Events\ActionDispatched;
 use BradieTilley\Actions\Events\ActionDispatchErrored;
@@ -21,7 +21,7 @@ class Dispatcher implements DispatcherContract
     /**
      * Run the action
      */
-    public function dispatch(Action $action): mixed
+    public function dispatch(Actionable $action): mixed
     {
         Event::dispatch(new ActionDispatching($action));
 

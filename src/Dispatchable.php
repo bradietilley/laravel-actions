@@ -4,7 +4,7 @@ namespace BradieTilley\Actions;
 
 use BradieTilley\Actions\Contracts\Dispatcher;
 
-trait Actionable
+trait Dispatchable
 {
     public static function dispatch(mixed ...$arguments): mixed
     {

@@ -2,12 +2,12 @@
 
 namespace BradieTilley\Actions\Events;
 
-use BradieTilley\Actions\Contracts\Action;
+use BradieTilley\Actions\Contracts\Actionable;
 use Throwable;
 
 class ActionDispatchErrored
 {
-    public function __construct(public readonly Action $action, public readonly Throwable $error)
+    public function __construct(public readonly Actionable $action, public readonly Throwable $error)
     {
     }
 }

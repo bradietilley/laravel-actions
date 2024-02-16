@@ -2,7 +2,7 @@
 
 namespace BradieTilley\Actions\Dispatcher;
 
-use BradieTilley\Actions\Contracts\Action;
+use BradieTilley\Actions\Contracts\Actionable;
 use BradieTilley\Actions\Dispatcher\Dispatcher as ActualDispatcher;
 use Closure;
 use Illuminate\Contracts\Container\Container;
@@ -18,21 +18,21 @@ class FakeDispatcher extends ActualDispatcher
     /**
      * List of actions to fake
      *
-     * @var array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool)>
+     * @var array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool)>
      */
     protected array $actionsToFake = [];
 
     /**
      * List of actions to dispatch
      *
-     * @var array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool)>
+     * @var array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool)>
      */
     protected array $actionsToDispatch = [];
 
     /**
      * List of actions that have run this session
      *
-     * @var array<class-string, array<int, Action>>
+     * @var array<class-string, array<int, Actionable>>
      */
     protected array $actions = [];
 
@@ -42,7 +42,7 @@ class FakeDispatcher extends ActualDispatcher
     protected bool $executeActions = false;
 
     /**
-     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool) $actionsToFake
+     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool) $actionsToFake
      */
     public function __construct(array|string|Closure $actionsToFake, Container $container)
     {
@@ -53,7 +53,7 @@ class FakeDispatcher extends ActualDispatcher
     /**
      * Specify the jobs that should be dispatched instead of faked.
      *
-     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool) $actionsToDispatch
+     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool) $actionsToDispatch
      */
     public function except(array|string|Closure $actionsToDispatch): static
     {
@@ -87,7 +87,7 @@ class FakeDispatcher extends ActualDispatcher
     /**
      * Dispatch the given action
      */
-    public function dispatch(Action $action): mixed
+    public function dispatch(Actionable $action): mixed
     {
         if (! $this->shouldFakeJob($action)) {
             return parent::dispatch($action);
@@ -109,7 +109,7 @@ class FakeDispatcher extends ActualDispatcher
     /**
      * Determine if an action should be faked or actually dispatched.
      */
-    protected function shouldFakeJob(Action $action): bool
+    protected function shouldFakeJob(Actionable $action): bool
     {
         if ($this->shouldDispatchCommand($action)) {
             return false;
@@ -131,7 +131,7 @@ class FakeDispatcher extends ActualDispatcher
     /**
      * Determine if a command should be dispatched or not.
      */
-    protected function shouldDispatchCommand(Action $action): bool
+    protected function shouldDispatchCommand(Actionable $action): bool
     {
         return Collection::make($this->actionsToDispatch)
             ->filter(function (Closure|string $job) use ($action) {
@@ -230,7 +230,7 @@ class FakeDispatcher extends ActualDispatcher
         $callback = $callback ?: fn () => true;
 
         return Collection::make($this->actions[$command])
-            ->filter(fn (Action $action) => $callback($action));
+            ->filter(fn (Actionable $action) => $callback($action));
     }
 
     /**

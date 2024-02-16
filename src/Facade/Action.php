@@ -2,7 +2,7 @@
 
 namespace BradieTilley\Actions\Facade;
 
-use BradieTilley\Actions\Contracts\Action as Actionable;
+use BradieTilley\Actions\Contracts\Actionable as Actionable;
 use BradieTilley\Actions\Contracts\Dispatcher as DispatcherContract;
 use BradieTilley\Actions\Dispatcher\FakeDispatcher;
 use Closure;
@@ -26,7 +26,7 @@ class Action extends Facade
     /**
      * Replace the bound instance with a fake.
      *
-     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool) $actionsToFake
+     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool) $actionsToFake
      */
     public static function fake(array|string|Closure $actionsToFake = []): FakeDispatcher
     {
