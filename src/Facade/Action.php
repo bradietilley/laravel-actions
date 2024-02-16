@@ -2,20 +2,21 @@
 
 namespace BradieTilley\Actions\Facade;
 
+use BradieTilley\Actions\Contracts\Action as Actionable;
 use BradieTilley\Actions\Contracts\Dispatcher as DispatcherContract;
 use BradieTilley\Actions\Dispatcher\FakeDispatcher;
 use Closure;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static mixed dispatch(mixed $command)
+ * @method static mixed dispatch(Actionable $action)
  * @method static BradieTilley\Actions\Dispatcher\FakeDispatcher except(array|string $jobsToDispatch)
- * @method static void assertDispatched(string|\Closure $command, callable|int|null $callback = null)
- * @method static void assertDispatchedTimes(string|\Closure $command, int $times = 1)
- * @method static void assertNotDispatched(string|\Closure $command, callable|null $callback = null)
+ * @method static void assertDispatched(string|\Closure $action, callable|int|null $callback = null)
+ * @method static void assertDispatchedTimes(string|\Closure $action, int $times = 1)
+ * @method static void assertNotDispatched(string|\Closure $action, callable|null $callback = null)
  * @method static void assertNothingDispatched()
- * @method static \Illuminate\Support\Collection dispatched(string $command, callable|null $callback = null)
- * @method static bool hasDispatched(string $command)
+ * @method static \Illuminate\Support\Collection dispatched(string $action, callable|null $callback = null)
+ * @method static bool hasDispatched(string $action)
  *
  * @see \BradieTilley\Actions\Dispatcher\Dispatcher
  * @see \BradieTilley\Actions\Dispatcher\FakeDispatcher

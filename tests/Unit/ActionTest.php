@@ -1,9 +1,14 @@
 <?php
 
 use BradieTilley\Actions\Dispatcher\FakeDispatcher;
+use BradieTilley\Actions\Events\ActionDispatched;
+use BradieTilley\Actions\Events\ActionDispatchErrored;
+use BradieTilley\Actions\Events\ActionDispatching;
 use BradieTilley\Actions\Facade\Action;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Event;
 use Tests\Fixtures\ExampleAction;
+use Tests\Fixtures\ExampleActionWithError;
 use Tests\Fixtures\ExampleActionWithFakeHandler;
 
 // test('an action can be run', function () {
@@ -94,4 +99,27 @@ test('an action can be faked with invocation enabled', function () {
 
     Action::assertDispatched(ExampleActionWithFakeHandler::class);
     Action::assertNotDispatched(ExampleAction::class);
+});
+
+test('events are fired correctly', function () {
+    Event::fake();
+
+    Action::dispatch($action = new ExampleAction([ 'foo' => 'bar' ]));
+
+    Event::assertDispatched(fn (ActionDispatching $event) => $event->action === $action);
+    Event::assertDispatched(fn (ActionDispatched $event) => $event->action === $action);
+
+    /**
+     * Try again with an action that errors out
+     */
+
+    Event::fake();
+
+    $action = new ExampleActionWithError([]);
+    expect(fn () => Action::dispatch($action))
+        ->toThrow(InvalidArgumentException::class, 'This is a test exception');
+
+    Event::assertDispatched(fn (ActionDispatching $event) => $event->action === $action);
+    Event::assertDispatched(fn (ActionDispatchErrored $event) => $event->action === $action);
+
 });

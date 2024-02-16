@@ -4,7 +4,12 @@ namespace BradieTilley\Actions\Dispatcher;
 
 use BradieTilley\Actions\Contracts\Action;
 use BradieTilley\Actions\Contracts\Dispatcher as DispatcherContract;
+use BradieTilley\Actions\Events\ActionDispatched;
+use BradieTilley\Actions\Events\ActionDispatchErrored;
+use BradieTilley\Actions\Events\ActionDispatching;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Facades\Event;
+use Throwable;
 
 class Dispatcher implements DispatcherContract
 {
@@ -17,7 +22,19 @@ class Dispatcher implements DispatcherContract
      */
     public function dispatch(Action $action): mixed
     {
-        /** @phpstan-ignore-next-line */
-        return $this->container->call($action->handle(...));
+        Event::dispatch(new ActionDispatching($action));
+
+        try {
+            /** @phpstan-ignore-next-line */
+            $value = $this->container->call($action->handle(...));
+        } catch (Throwable $error) {
+            Event::dispatch(new ActionDispatchErrored($action, $error));
+
+            throw $error;
+        }
+
+        Event::dispatch(new ActionDispatched($action, $value));
+
+        return $value;
     }
 }
