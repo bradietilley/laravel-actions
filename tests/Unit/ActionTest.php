@@ -4,7 +4,7 @@ use BradieTilley\Actions\Dispatcher\FakeDispatcher;
 use BradieTilley\Actions\Events\ActionDispatched;
 use BradieTilley\Actions\Events\ActionDispatchErrored;
 use BradieTilley\Actions\Events\ActionDispatching;
-use BradieTilley\Actions\Facade\Action;
+use BradieTilley\Actions\Facades\Action;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Event;

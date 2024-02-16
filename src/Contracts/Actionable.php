@@ -8,6 +8,7 @@ namespace BradieTilley\Actions\Contracts;
  * dependency injection.
  *
  * @method mixed handle(...$arguments)
+ * @method static mixed dispatch(mixed ...$arguments)
  */
 interface Actionable
 {

@@ -4,7 +4,7 @@ use BradieTilley\Actions\Contracts\Actionable;
 use BradieTilley\Actions\Contracts\Dispatcher as ContractsDispatcher;
 use BradieTilley\Actions\Dispatcher\Dispatcher;
 use BradieTilley\Actions\Dispatcher\FakeDispatcher;
-use BradieTilley\Actions\Facade\Action as Facade;
+use BradieTilley\Actions\Facades\Action as Facade;
 use Illuminate\Support\Collection;
 use Tests\Fixtures\ExampleAction;
 use Tests\Fixtures\ExampleActionA;

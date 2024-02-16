@@ -1,6 +1,6 @@
 <?php
 
-namespace BradieTilley\Actions\Facade;
+namespace BradieTilley\Actions\Facades;
 
 use BradieTilley\Actions\Contracts\Actionable as Actionable;
 use BradieTilley\Actions\Contracts\Dispatcher as DispatcherContract;
