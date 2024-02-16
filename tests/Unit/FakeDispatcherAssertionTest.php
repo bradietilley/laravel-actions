@@ -147,6 +147,12 @@ test('the assertDispatchedTimes works with an action class name', function () {
         expect(fn () => Facade::assertDispatchedTimes(ExampleAction::class, $time + 1))
             ->toThrow(ExpectationFailedException::class);
     }
+
+    /**
+     * It can also be run via the assertDispatched() method
+     */
+    expect(Facade::assertDispatched(ExampleAction::class, 5))
+        ->not->toThrow(ExpectationFailedException::class);
 });
 
 test('the assertDispatchedTimes works with a callback', function () {
@@ -198,6 +204,12 @@ test('the assertDispatchedTimes works with a callback', function () {
         expect(fn () => Facade::assertDispatchedTimes(fn (ExampleAction $action) => $action->value === $expect, $time + 1))
             ->toThrow(ExpectationFailedException::class);
     }
+
+    /**
+     * It can also be run via the assertDispatched() method
+     */
+    expect(Facade::assertDispatched(fn (ExampleAction $action) => $action->value === $expect, 5))
+        ->not->toThrow(ExpectationFailedException::class);
 });
 
 test('the assertNotDispatched works with an action class name', function () {

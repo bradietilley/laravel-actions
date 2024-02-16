@@ -10,3 +10,10 @@ function getDispatched(FakeDispatcher $dispatcher): array
 
     return $reflection->getValue($dispatcher);
 }
+
+function invokeProtectedMethod(object $object, string $method, mixed ...$args): mixed
+{
+    $reflection = new ReflectionMethod($object, $method);
+
+    return $reflection->invoke($object, ...$args);
+}

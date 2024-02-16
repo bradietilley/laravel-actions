@@ -1,9 +1,11 @@
 <?php
 
+use BradieTilley\Actionables\Contracts\Action;
 use BradieTilley\Actionables\Contracts\Dispatcher as ContractsDispatcher;
 use BradieTilley\Actionables\Dispatcher\Dispatcher;
 use BradieTilley\Actionables\Dispatcher\FakeDispatcher;
 use BradieTilley\Actionables\Facade\Action as Facade;
+use Illuminate\Support\Collection;
 use Tests\Fixtures\ExampleAction;
 use Tests\Fixtures\ExampleActionA;
 use Tests\Fixtures\ExampleActionB;
@@ -146,5 +148,59 @@ test('the FakeDispatcher can choose actions to fake and those to run', function 
         'c' => [
             ['c'],
         ],
+    ]);
+});
+
+test('a FakeDispatcher use a closure to determine if an action should be faked', function () {
+    $all = Collection::make();
+
+    $fake = Facade::fake(function (Action $action) use ($all) {
+        $all->push($action->value);
+
+        return $action->value['fake'] === true;
+    });
+
+    $shouldRun = fn (Action $action) => invokeProtectedMethod($fake, 'shouldFakeJob', $action);
+
+    expect($shouldRun(new ExampleAction([ 'fake' => true ])))->toBe(true);
+    expect($shouldRun(new ExampleAction([ 'fake' => false ])))->toBe(false);
+
+    expect($shouldRun(new ExampleActionWithFakeHandler([ 'fake' => 1 ])))->toBe(false);
+    expect($shouldRun(new ExampleActionWithFakeHandler([ 'fake' => 0 ])))->toBe(false);
+    expect($shouldRun(new ExampleActionWithFakeHandler([ 'fake' => true ])))->toBe(true);
+
+    expect($all->all())->toBe([
+        ['fake' => true],
+        ['fake' => false],
+        ['fake' => 1],
+        ['fake' => 0],
+        ['fake' => true],
+    ]);
+});
+
+test('a FakeDispatcher use a closure to determine if an action should be dispatched', function () {
+    $all = Collection::make();
+
+    $fake = Facade::fake()->except(function (Action $action) use ($all) {
+        $all->push($action->value);
+
+        return $action->value['run'] === true;
+    });
+
+    $shouldRun = fn (Action $action) => invokeProtectedMethod($fake, 'shouldDispatchCommand', $action);
+
+    expect($shouldRun(new ExampleAction([ 'run' => true ])))->toBe(true);
+    expect($shouldRun(new ExampleAction([ 'run' => false ])))->toBe(false);
+
+    expect($shouldRun(new ExampleActionWithFakeHandler([ 'run' => 1 ])))->toBe(false);
+    expect($shouldRun(new ExampleActionWithFakeHandler([ 'run' => 0 ])))->toBe(false);
+    expect($shouldRun(new ExampleActionWithFakeHandler([ 'run' => true ])))->toBe(true);
+
+    expect($all->all())->toBe([
+        ['run' => true],
+        ['run' => false],
+        ['run' => 1],
+        ['run' => 0],
+        ['run' => true],
     ]);
 });
