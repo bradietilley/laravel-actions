@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "BradieTilley\\Actionables\\": "src/"
+            "BradieTilley\\Actions\\": "src/"
         }
     },
     "autoload-dev": {
@@ -41,7 +41,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "BradieTilley\\Actionables\\ActionServiceProvider"
+                "BradieTilley\\Actions\\ActionServiceProvider"
             ]
         }
     }
