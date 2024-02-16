@@ -1,8 +1,8 @@
 <?php
 
-namespace BradieTilley\Actionables;
+namespace BradieTilley\Actions;
 
-use BradieTilley\Actionables\Contracts\Action as ContractsAction;
+use BradieTilley\Actions\Contracts\Action as ContractsAction;
 
 abstract class Action implements ContractsAction
 {

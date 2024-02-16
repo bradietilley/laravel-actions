@@ -2,7 +2,7 @@
 
 namespace Tests\Fixtures;
 
-use BradieTilley\Actionables\Action;
+use BradieTilley\Actions\Action;
 
 class ExampleActionWithFakeHandler extends Action
 {

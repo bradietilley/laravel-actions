@@ -1,6 +1,6 @@
 <?php
 
-use BradieTilley\Actionables\Dispatcher\FakeDispatcher;
+use BradieTilley\Actions\Dispatcher\FakeDispatcher;
 
 uses(Tests\TestCase::class)->in('Feature', 'Unit');
 

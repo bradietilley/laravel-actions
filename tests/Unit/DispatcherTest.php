@@ -1,6 +1,6 @@
 <?php
 
-use BradieTilley\Actionables\Contracts\Dispatcher;
+use BradieTilley\Actions\Contracts\Dispatcher;
 use Tests\Fixtures\ExampleAction;
 
 test('the dispatcher class can run actions', function () {

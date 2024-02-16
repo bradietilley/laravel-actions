@@ -1,9 +1,9 @@
 <?php
 
-namespace BradieTilley\Actionables\Dispatcher;
+namespace BradieTilley\Actions\Dispatcher;
 
-use BradieTilley\Actionables\Contracts\Action;
-use BradieTilley\Actionables\Dispatcher\Dispatcher as ActualDispatcher;
+use BradieTilley\Actions\Contracts\Action;
+use BradieTilley\Actions\Dispatcher\Dispatcher as ActualDispatcher;
 use Closure;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Arr;
@@ -18,14 +18,14 @@ class FakeDispatcher extends ActualDispatcher
     /**
      * List of actions to fake
      *
-     * @var array<int, class-string|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool)>
+     * @var array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool)>
      */
     protected array $actionsToFake = [];
 
     /**
      * List of actions to dispatch
      *
-     * @var array<int, class-string|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool)>
+     * @var array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool)>
      */
     protected array $actionsToDispatch = [];
 
@@ -42,7 +42,7 @@ class FakeDispatcher extends ActualDispatcher
     protected bool $executeActions = false;
 
     /**
-     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool)>|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool) $actionsToFake
+     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool) $actionsToFake
      */
     public function __construct(array|string|Closure $actionsToFake, Container $container)
     {
@@ -53,7 +53,7 @@ class FakeDispatcher extends ActualDispatcher
     /**
      * Specify the jobs that should be dispatched instead of faked.
      *
-     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool)>|(Closure(\BradieTilley\Actionables\Contracts\Action $action): bool) $actionsToDispatch
+     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Action $action): bool) $actionsToDispatch
      */
     public function except(array|string|Closure $actionsToDispatch): static
     {

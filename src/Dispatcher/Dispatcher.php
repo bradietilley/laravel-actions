@@ -1,9 +1,9 @@
 <?php
 
-namespace BradieTilley\Actionables\Dispatcher;
+namespace BradieTilley\Actions\Dispatcher;
 
-use BradieTilley\Actionables\Contracts\Action;
-use BradieTilley\Actionables\Contracts\Dispatcher as DispatcherContract;
+use BradieTilley\Actions\Contracts\Action;
+use BradieTilley\Actions\Contracts\Dispatcher as DispatcherContract;
 use Illuminate\Contracts\Container\Container;
 
 class Dispatcher implements DispatcherContract

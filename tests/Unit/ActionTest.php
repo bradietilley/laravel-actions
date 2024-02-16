@@ -1,7 +1,7 @@
 <?php
 
-use BradieTilley\Actionables\Dispatcher\FakeDispatcher;
-use BradieTilley\Actionables\Facade\Action;
+use BradieTilley\Actions\Dispatcher\FakeDispatcher;
+use BradieTilley\Actions\Facade\Action;
 use Illuminate\Support\Facades\Bus;
 use Tests\Fixtures\ExampleAction;
 use Tests\Fixtures\ExampleActionWithFakeHandler;

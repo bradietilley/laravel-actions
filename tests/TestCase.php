@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use BradieTilley\Actionables\ActionServiceProvider;
+use BradieTilley\Actions\ActionServiceProvider;
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
 
 abstract class TestCase extends TestbenchTestCase

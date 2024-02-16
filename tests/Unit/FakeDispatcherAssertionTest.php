@@ -1,6 +1,6 @@
 <?php
 
-use BradieTilley\Actionables\Facade\Action as Facade;
+use BradieTilley\Actions\Facade\Action as Facade;
 use PHPUnit\Framework\ExpectationFailedException;
 use Tests\Fixtures\ExampleAction;
 use Tests\Fixtures\ExampleActionWithFakeHandler;

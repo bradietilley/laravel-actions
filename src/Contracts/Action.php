@@ -1,6 +1,6 @@
 <?php
 
-namespace BradieTilley\Actionables\Contracts;
+namespace BradieTilley\Actions\Contracts;
 
 /**
  * @method mixed handle(...$arguments)

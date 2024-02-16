@@ -1,9 +1,9 @@
 <?php
 
-namespace BradieTilley\Actionables;
+namespace BradieTilley\Actions;
 
-use BradieTilley\Actionables\Contracts\Dispatcher as DispatcherContract;
-use BradieTilley\Actionables\Dispatcher\Dispatcher;
+use BradieTilley\Actions\Contracts\Dispatcher as DispatcherContract;
+use BradieTilley\Actions\Dispatcher\Dispatcher;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 

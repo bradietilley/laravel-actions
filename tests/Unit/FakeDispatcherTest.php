@@ -1,10 +1,10 @@
 <?php
 
-use BradieTilley\Actionables\Contracts\Action;
-use BradieTilley\Actionables\Contracts\Dispatcher as ContractsDispatcher;
-use BradieTilley\Actionables\Dispatcher\Dispatcher;
-use BradieTilley\Actionables\Dispatcher\FakeDispatcher;
-use BradieTilley\Actionables\Facade\Action as Facade;
+use BradieTilley\Actions\Contracts\Action;
+use BradieTilley\Actions\Contracts\Dispatcher as ContractsDispatcher;
+use BradieTilley\Actions\Dispatcher\Dispatcher;
+use BradieTilley\Actions\Dispatcher\FakeDispatcher;
+use BradieTilley\Actions\Facade\Action as Facade;
 use Illuminate\Support\Collection;
 use Tests\Fixtures\ExampleAction;
 use Tests\Fixtures\ExampleActionA;

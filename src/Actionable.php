@@ -1,8 +1,8 @@
 <?php
 
-namespace BradieTilley\Actionables;
+namespace BradieTilley\Actions;
 
-use BradieTilley\Actionables\Contracts\Dispatcher;
+use BradieTilley\Actions\Contracts\Dispatcher;
 
 trait Actionable
 {
