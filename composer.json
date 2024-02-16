@@ -1,11 +1,11 @@
 {
-    "name": "bradietilley/skeleton",
-    "description": "Blank skeleton repo",
+    "name": "bradietilley/laravel-actions",
+    "description": "Action class framework for Laravel",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "BradieTilley\\Skeleton\\": "src/"
+            "BradieTilley\\LaravelActions\\": "src/"
         }
     },
     "autoload-dev": {

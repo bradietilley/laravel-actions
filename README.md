@@ -1,26 +1,26 @@
-# Skeleton
+# Laravel Actions
 
-Skeleton
+Laravel Actions
 
-![Static Analysis](https://github.com/bradietilley/skeleton/actions/workflows/static.yml/badge.svg)
-![Tests](https://github.com/bradietilley/skeleton/actions/workflows/tests.yml/badge.svg)
+![Static Analysis](https://github.com/bradietilley/laravel-actions/actions/workflows/static.yml/badge.svg)
+![Tests](https://github.com/bradietilley/laravel-actions/actions/workflows/tests.yml/badge.svg)
 
 
 ## Introduction
 
-Skeleton
+Laravel Actions
 
 
 ## Installation
 
 ```
-composer require bradietilley/skeleton
+composer require bradietilley/laravel-actions
 ```
 
 
 ## Documentation
 
-Skeleton
+Laravel Actions
 
 
 ## Author
