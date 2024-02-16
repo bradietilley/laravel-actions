@@ -140,5 +140,6 @@ test('events are timed', function () {
 
     expect($times)->toHaveCount(2);
     /** @var Collection<int, Duration> $times */
-    expect($times->last()->asMilliseconds())->toBeGreaterThan(10)->toBeLessThan(15);
+    expect($times->last()->asMilliseconds())->toBeGreaterThan(10)->toBeLessThan(50);
+    // 50ms to be generous for Actions pipeline for MacOS
 });
