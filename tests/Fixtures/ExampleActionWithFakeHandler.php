@@ -18,7 +18,7 @@ class ExampleActionWithFakeHandler extends Action
     public function handleFake(): array
     {
         return [
-            'foo' => 'foo',
+            'foo' => 'faked',
         ];
     }
 }

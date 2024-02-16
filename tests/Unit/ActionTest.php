@@ -59,11 +59,37 @@ test('an action can be faked with invocation enabled', function () {
         'foo' => 'bar',
     ];
 
-    $fake = Action::fake()->allowExecution();
+    /**
+     * Try with no faking to ensure the handle method is run correctly
+     */
+    $result = ExampleActionWithFakeHandler::dispatch($expect);
+    expect($result)->toBe([
+        'foo' => 'bar',
+    ]);
+
+    /**
+     * Try with faking but execution to ensure the handle method is run correctly
+     */
+    Action::fake()->allowExecution();
 
     $result = ExampleActionWithFakeHandler::dispatch($expect);
     expect($result)->toBe([
         'foo' => 'bar',
+    ]);
+
+    Action::assertDispatched(ExampleActionWithFakeHandler::class);
+    Action::assertNotDispatched(ExampleAction::class);
+
+    /**
+     * Try with faking but no execution to ensure the handleFake method is run
+     */
+    Action::fake()->disallowExecution();
+    Action::assertNotDispatched(ExampleActionWithFakeHandler::class);
+    Action::assertNotDispatched(ExampleAction::class);
+
+    $result = ExampleActionWithFakeHandler::dispatch($expect);
+    expect($result)->toBe([
+        'foo' => 'faked',
     ]);
 
     Action::assertDispatched(ExampleActionWithFakeHandler::class);
