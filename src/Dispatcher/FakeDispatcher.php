@@ -3,7 +3,7 @@
 namespace BradieTilley\Actions\Dispatcher;
 
 use BradieTilley\Actions\Contracts\Actionable;
-use BradieTilley\Actions\Contracts\SupportsFaking;
+use BradieTilley\Actions\Contracts\IsFakeable;
 use BradieTilley\Actions\Dispatcher\Dispatcher as ActualDispatcher;
 use Closure;
 use Illuminate\Contracts\Container\Container;
@@ -139,7 +139,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
             return parent::dispatch($action);
         }
 
-        if ($action instanceof SupportsFaking) {
+        if ($action instanceof IsFakeable) {
             return $action->handleFake();
         }
 

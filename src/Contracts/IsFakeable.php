@@ -33,6 +33,6 @@ namespace BradieTilley\Actions\Contracts;
  *
  * @method mixed handleFake(...$arguments)
  */
-interface SupportsFaking
+interface IsFakeable
 {
 }

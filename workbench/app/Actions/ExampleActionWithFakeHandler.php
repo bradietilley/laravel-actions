@@ -3,9 +3,9 @@
 namespace Workbench\App\Actions;
 
 use BradieTilley\Actions\Action;
-use BradieTilley\Actions\Contracts\SupportsFaking;
+use BradieTilley\Actions\Contracts\IsFakeable;
 
-class ExampleActionWithFakeHandler extends Action implements SupportsFaking
+class ExampleActionWithFakeHandler extends Action implements IsFakeable
 {
     public function __construct(public array $value)
     {
