@@ -62,8 +62,11 @@ class Action extends Facade
      */
     public static function replace(array $actions): void
     {
+        /** @var Application $app */
+        $app = app();
+
         foreach ($actions as $find => $replace) {
-            app()->alias($replace, $find);
+            $app->alias($replace, $find);
         }
     }
 
