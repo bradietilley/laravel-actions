@@ -33,13 +33,17 @@ class Action extends Facade
     /**
      * Replace the bound instance with a fake.
      *
-     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool) $actionsToFake
+     * @param class-string|array<class-string|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
      */
     public static function fake(array|string|Closure $actionsToFake = []): FakeDispatcher
     {
-        $app = static::$app;
-        $events = $app->make(Dispatcher::class);
-        $db = $app->make(DatabaseManager::class);
+        $app = app();
+
+        /** @var Dispatcher $events */
+        $events = app(Dispatcher::class);
+
+        /** @var DatabaseManager $db */
+        $db = app(DatabaseManager::class);
 
         $fake = new FakeDispatcher($actionsToFake, $app, $events, $db);
 
@@ -57,7 +61,7 @@ class Action extends Facade
     public static function replace(array $actions): void
     {
         foreach ($actions as $find => $replace) {
-            static::$app->alias($replace, $find);
+            app()->alias($replace, $find);
         }
     }
 

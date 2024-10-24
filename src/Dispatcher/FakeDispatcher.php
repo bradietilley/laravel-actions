@@ -22,14 +22,14 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     /**
      * List of actions to fake
      *
-     * @var array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Actionable): bool)>
+     * @var array<class-string|(Closure(Actionable): bool)>
      */
     protected array $actionsToFake = [];
 
     /**
      * List of actions to dispatch
      *
-     * @var array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Actionable): bool)>
+     * @var array<class-string|(Closure(Actionable): bool)>
      */
     protected array $actionsToDispatch = [];
 
@@ -46,7 +46,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     protected bool $executeActions = false;
 
     /**
-     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool) $actionsToFake
+     * @param class-string|array<class-string|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
      */
     public function __construct(
         array|string|Closure $actionsToFake,
@@ -60,6 +60,8 @@ class FakeDispatcher extends ActualDispatcher implements Fake
 
     /**
      * Specify the actions that should be faked
+     *
+     * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
      */
     public function addFake(array|string|Closure $actionsToFake): static
     {
@@ -68,6 +70,8 @@ class FakeDispatcher extends ActualDispatcher implements Fake
 
     /**
      * Specify the actions that should be faked
+     *
+     * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
      */
     public function with(array|string|Closure $actionsToFake): static
     {
@@ -79,7 +83,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     /**
      * Specify the actions that should be dispatched instead of faked.
      *
-     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool) $actionsToDispatch
+     * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToDispatch
      */
     public function removeFake(array|string|Closure $actionsToDispatch): static
     {
@@ -89,7 +93,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     /**
      * Specify the actions that should be dispatched instead of faked.
      *
-     * @param class-string|array<int, class-string|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool)>|(Closure(\BradieTilley\Actions\Contracts\Actionable $action): bool) $actionsToDispatch
+     * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToDispatch
      */
     public function except(array|string|Closure $actionsToDispatch): static
     {
