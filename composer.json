@@ -5,33 +5,34 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "BradieTilley\\Actions\\": "src/"
+            "BradieTilley\\Actions\\": "src/",
+            "BradieTilley\\Actions\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/"
         }
     },
     "authors": [
         {
             "name": "Bradie Tilley",
-            "homepage": "https://github.com/bradietilley"
+            "homepage": "https://github.com/bradietilley",
+            "email": "bradietilley@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "illuminate/bus": "^10.0",
-        "illuminate/container": "^10.0",
-        "illuminate/support": "^10.0"
+        "laravel/framework": "^10.0|^11.0",
+        "spatie/laravel-package-tools": "^1.16"
     },
     "require-dev": {
-        "symfony/var-dumper": "^6.1.5",
         "laravel/pint": "^1.0",
         "pestphp/pest": "^2.0",
         "phpstan/phpstan": "^1.8",
-        "orchestra/testbench": "^8.21"
+        "orchestra/testbench": "^9.0"
     },
     "config": {
         "allow-plugins": {
@@ -41,7 +42,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "BradieTilley\\Actions\\ActionServiceProvider"
+                "BradieTilley\\Actions\\ActionsServiceProvider"
             ]
         }
     }

@@ -2,8 +2,8 @@
 
 use BradieTilley\Actions\Facades\Action as Facade;
 use PHPUnit\Framework\ExpectationFailedException;
-use Tests\Fixtures\ExampleAction;
-use Tests\Fixtures\ExampleActionWithFakeHandler;
+use Workbench\App\Actions\ExampleAction;
+use Workbench\App\Actions\ExampleActionWithFakeHandler;
 
 beforeEach(function () {
     Facade::fake();

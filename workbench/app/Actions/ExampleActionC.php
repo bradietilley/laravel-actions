@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Fixtures;
+namespace Workbench\App\Actions;
 
 use BradieTilley\Actions\Action;
 
@@ -8,11 +8,11 @@ class ExampleActionC extends Action
 {
     public static array $ran = [];
 
-    public function __construct(public array $value)
+    public function __construct(public array|int $value)
     {
     }
 
-    public function handle(): array
+    public function handle(): array|int
     {
         static::$ran[] = $this->value;
 

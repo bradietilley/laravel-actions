@@ -4,13 +4,13 @@ A simple yet flexible implementation of Actions in Laravel.
 
 ![Static Analysis](https://github.com/bradietilley/laravel-actions/actions/workflows/static.yml/badge.svg)
 ![Tests](https://github.com/bradietilley/laravel-actions/actions/workflows/tests.yml/badge.svg)
-
+![Min Laravel Version](https://img.shields.io/badge/Min%20Laravel%20Version-11-F9322C)
 
 ## Introduction
 
 Actions are compartmentalised bits of code that perform an... Action. This package provides a one-stop shop for how to define your application's actions. Many developers believe that actions "should not" be defined as methods in your `Model` (such as `$user->assignDefaultRole()`), nor should they be in standalone `Job` classess (`App\Jobs\Users\AssignDefaultRole`). This is where this package comes in to play.
 
-In this package, Actions are built similar to (synchronously dispatched) Jobs. Such as there's a dispatcher that dispatches the action synchronously, just like with jobs, and there's also even a Facade to enable faking of the actions, just like with jobs.
+In this package, Actions are built similar to synchronously dispatched Jobs. Such as there's a dispatcher that dispatches the action synchronously, just like with jobs, and there's also even a Facade to enable faking of the actions, just like with jobs.
 
 The separation from `Bus` is crucial for sanity in larger projects where you have a huge amount of jobs and actions. Plus it just makes sense. Just like how you wouldn't want `Event::fake()` to fake the `Bus` classes (jobs), you wouldn't want `Bus::fake()` to fake your `Action` classes. Or maybe you do. Up to you. Either way...
 
@@ -235,7 +235,7 @@ Event::listen(function (ActionDispatched $event) {
 });
 ```
 
-When an action throws a `Throwable` error/exception, it will trigger an event: `BradieTilley\Actions\Events\ActionDispatchErrored`.
+When an action throws a `Throwable` error/exception, it will trigger an event: `BradieTilley\Actions\Events\ActionFailed`.
 
 The `BradieTilley\Actions\Contracts\Actionable` class is provided in the event under the `action` property.
 
@@ -245,7 +245,7 @@ The exception (instance of `Throwable`) class is provided in the event under the
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 
-Event::listen(function (ActionDispatchErrored $event) {
+Event::listen(function (ActionFailed $event) {
     Log::channel('actions')->debug(sprintf(
         'Failed to run action %s with error %s (see sentry)',
         $event->action::class,
@@ -253,8 +253,6 @@ Event::listen(function (ActionDispatchErrored $event) {
     ));
 });
 ```
-
-
 
 ## Author
 

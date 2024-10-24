@@ -1,0 +1,9 @@
+parameters:
+  level: max
+  paths:
+    - src/
+  excludePaths:
+    - src/Pulse
+  ignoreErrors:
+    - '#Unsafe usage of new static\(\)#'
+    - '#.*(Livewire|Pulse).*#'

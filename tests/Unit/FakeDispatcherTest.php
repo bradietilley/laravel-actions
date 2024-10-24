@@ -4,13 +4,14 @@ use BradieTilley\Actions\Contracts\Actionable;
 use BradieTilley\Actions\Contracts\Dispatcher as ContractsDispatcher;
 use BradieTilley\Actions\Dispatcher\Dispatcher;
 use BradieTilley\Actions\Dispatcher\FakeDispatcher;
+use BradieTilley\Actions\Facades\Action;
 use BradieTilley\Actions\Facades\Action as Facade;
 use Illuminate\Support\Collection;
-use Tests\Fixtures\ExampleAction;
-use Tests\Fixtures\ExampleActionA;
-use Tests\Fixtures\ExampleActionB;
-use Tests\Fixtures\ExampleActionC;
-use Tests\Fixtures\ExampleActionWithFakeHandler;
+use Workbench\App\Actions\ExampleAction;
+use Workbench\App\Actions\ExampleActionA;
+use Workbench\App\Actions\ExampleActionB;
+use Workbench\App\Actions\ExampleActionC;
+use Workbench\App\Actions\ExampleActionWithFakeHandler;
 
 test('the fake method returns a fake dispatcher', function () {
     expect(Facade::getFacadeRoot())->toBeInstanceOf(Dispatcher::class);
@@ -203,4 +204,52 @@ test('a FakeDispatcher use a closure to determine if an action should be dispatc
         ['run' => 0],
         ['run' => true],
     ]);
+});
+
+test('a FakeDispatcher can add an extra fake after being faked', function () {
+    /** Reset */
+    ExampleActionA::$ran = [];
+    ExampleActionB::$ran = [];
+    ExampleActionC::$ran = [];
+
+    /** Control Test */
+    ExampleActionA::dispatch(1);
+    expect(ExampleActionA::$ran)->toBe([ 1 ]);
+    ExampleActionB::dispatch(1);
+    expect(ExampleActionB::$ran)->toBe([ 1 ]);
+    ExampleActionC::dispatch(1);
+    expect(ExampleActionC::$ran)->toBe([ 1 ]);
+
+    /** Fake one */
+    Action::fake(ExampleActionA::class);
+
+    /** Action A is not run */
+    ExampleActionA::dispatch(2);
+    expect(ExampleActionA::$ran)->toBe([ 1 ]);
+    ExampleActionB::dispatch(2);
+    expect(ExampleActionB::$ran)->toBe([ 1, 2 ]);
+    ExampleActionC::dispatch(2);
+    expect(ExampleActionC::$ran)->toBe([ 1, 2 ]);
+
+    /** Fake another one */
+    Action::addFake(ExampleActionB::class);
+
+    /** Action A and Action B are not run */
+    ExampleActionA::dispatch(3);
+    expect(ExampleActionA::$ran)->toBe([ 1 ]);
+    ExampleActionB::dispatch(3);
+    expect(ExampleActionB::$ran)->toBe([ 1, 2 ]);
+    ExampleActionC::dispatch(3);
+    expect(ExampleActionC::$ran)->toBe([ 1, 2, 3 ]);
+
+    /** Unfake one */
+    Action::removeFake(ExampleActionA::class);
+
+    /** Action A is run, but Action B is not run */
+    ExampleActionA::dispatch(4);
+    expect(ExampleActionA::$ran)->toBe([ 1, 4 ]);
+    ExampleActionB::dispatch(4);
+    expect(ExampleActionB::$ran)->toBe([ 1, 2 ]);
+    ExampleActionC::dispatch(4);
+    expect(ExampleActionC::$ran)->toBe([ 1, 2, 3, 4 ]);
 });
