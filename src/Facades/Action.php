@@ -8,6 +8,7 @@ use BradieTilley\Actions\Dispatcher\FakeDispatcher;
 use Closure;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -37,6 +38,7 @@ class Action extends Facade
      */
     public static function fake(array|string|Closure $actionsToFake = []): FakeDispatcher
     {
+        /** @var Application $app */
         $app = app();
 
         /** @var Dispatcher $events */
