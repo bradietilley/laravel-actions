@@ -1,7 +1,7 @@
 <?php
 
 use BradieTilley\Actions\Contracts\Dispatcher;
-use Tests\Fixtures\ExampleAction;
+use Workbench\App\Actions\ExampleAction;
 
 test('the dispatcher class can run actions', function () {
     $action = new ExampleAction([ 'foo' => 'bar' ]);

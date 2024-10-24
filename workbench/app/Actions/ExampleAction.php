@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Fixtures;
+namespace Workbench\App\Actions;
 
 use BradieTilley\Actions\Action;
 

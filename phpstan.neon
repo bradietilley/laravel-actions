@@ -1,0 +1,6 @@
+parameters:
+  level: max
+  paths:
+    - src/
+  ignoreErrors:
+    - '#Unsafe usage of new static\(\)#'

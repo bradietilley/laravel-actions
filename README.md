@@ -4,13 +4,14 @@ A simple yet flexible implementation of Actions in Laravel.
 
 ![Static Analysis](https://github.com/bradietilley/laravel-actions/actions/workflows/static.yml/badge.svg)
 ![Tests](https://github.com/bradietilley/laravel-actions/actions/workflows/tests.yml/badge.svg)
-
+![Laravel Version](https://img.shields.io/badge/Laravel%20Version-11.28-F9322C)
+![PHP Version](https://img.shields.io/badge/PHP%20Version-8.3-4F5B93)
 
 ## Introduction
 
 Actions are compartmentalised bits of code that perform an... Action. This package provides a one-stop shop for how to define your application's actions. Many developers believe that actions "should not" be defined as methods in your `Model` (such as `$user->assignDefaultRole()`), nor should they be in standalone `Job` classess (`App\Jobs\Users\AssignDefaultRole`). This is where this package comes in to play.
 
-In this package, Actions are built similar to (synchronously dispatched) Jobs. Such as there's a dispatcher that dispatches the action synchronously, just like with jobs, and there's also even a Facade to enable faking of the actions, just like with jobs.
+In this package, Actions are built similar to synchronously dispatched Jobs. Such as there's a dispatcher that dispatches the action synchronously, just like with jobs, and there's also even a Facade to enable faking of the actions, just like with jobs.
 
 The separation from `Bus` is crucial for sanity in larger projects where you have a huge amount of jobs and actions. Plus it just makes sense. Just like how you wouldn't want `Event::fake()` to fake the `Bus` classes (jobs), you wouldn't want `Bus::fake()` to fake your `Action` classes. Or maybe you do. Up to you. Either way...
 
@@ -21,12 +22,11 @@ The separation from `Bus` is crucial for sanity in larger projects where you hav
 composer require bradietilley/laravel-actions
 ```
 
-
 ## Documentation
 
 First, brush up on your `Bus` knowledge (i.e. Jobs). Because this is pretty much a standalone copy of how (sychronously) dispatched jobs operate in conjunction with the `Bus::fake()` and `Bus::assert*()` methods.
 
-**Understanding Actions**
+### Actions → The `Action` class
 
 First and foremost, the equivalent to a job is a class that implements the `BradieTilley\Actions\Contracts\Actionable` interface. An `Actionable` class in one that has a `handle` method (like a job) and one that can be dispatched (like a job). The `Actionable` interface doesn't provide any method signature to allow for full customisation and dependency injection (to workaround a limitation of PHP).
 
@@ -82,7 +82,7 @@ class AssignDefaultRole implements \BradieTilley\Actions\Contracts\Actionable
 }
 ```
 
-**Understanding the Facade**
+### Actions → The `Action` facade
 
 A facade has been made available using the `BradieTilley\Actions\Facades\Action` class.
 
@@ -98,7 +98,29 @@ However you can also avoid the facade entirely by using the dispatch method (pro
 $role = AssignDefaultRole::dispatch($user);
 ```
 
-**Testing and faking actions**
+### Actions → Replacing Actions
+
+You can also replace actions - whether you're in a test environment or you just want some complex on-the-fly action swapping. Simply use the facade's `replace()` method to replace any actions with other actions. A replacement action should share a similar signature to the replaced action, such as having the same arguments and return type, but is not enforced.
+
+```php
+Action::replace(ExampleActionA::class, ExampleActionB::class);
+
+ExampleActionA::dispatch($user, '123');
+// Runs ExampleActionB with $user and '123' constructor arguments instead of ExampleActionA
+```
+
+You can also replace multiple at once:
+
+```php
+Action::replace([
+    // replace an action from a package and use your own action
+    DownloadAvatarFromUrl::class => CustomDownloadAvatarFromUrl::class,
+    // temporarily disable an integration
+    SynchroniseMemberToMailchimp::class => CustomEmptyAction::class,
+]);
+```
+
+### Testing → Faking
 
 The `Action` facade wraps the underlying `Dispatcher`, which can be swapped out for a `FakeDispatcher` that tracks all Actions that have been dispatched, just like the `Bus` Dispatcher does with jobs.
 
@@ -125,9 +147,11 @@ The following methods are supported:
 - `Action::assertNotDispatched()`
 - `Action::assertNothingDispatched()`
 
-These operate exactly like their `Bus` counterpart, so feel free to refer to Laravel's Bus Faking docs for how to use these 4 methods. 
+These operate exactly like their `Bus` counterpart, so feel free to refer to Laravel's Bus Faking docs for how to use these 4 methods as there may be crossover in functionality.
 
-**Testing and faking specific actions**
+### Testing → Faking specific actions
+
+You may wish to fake only a subset of actions. This can be achieved via the `Action::fake()` facade call:
 
 ```php
 use BradieTilley\Actions\Facades\Action;
@@ -145,7 +169,9 @@ RecordAuditLog::dispatch($user); // doesn't run
 Action::assertDispatched(RecordAuditLog::class); // pass
 ```
 
-**Testing and faking all except specific actions**
+### Testing → Faking all except specific actions
+
+You may wish to fake all actions except a few. This can be achieved via the `except()` method:
 
 ```php
 use BradieTilley\Actions\Facades\Action;
@@ -163,10 +189,32 @@ RecordAuditLog::dispatch($user); // doesn't run
 Action::assertDispatched(RecordAuditLog::class); // pass
 ```
 
-**Testing but still executing actions**
+### Testing → Faking and un-faking actions**
 
-Something that Bus doesn't offer (AFAIK) is to allow for assertions against dispatched jobs but
-have those jobs still run. With actions, just simply allow execution using the following syntax:
+Often your test suite will provide a constant list of actions to fake, however for specific tests you might wish to include additional actions to fake. 
+
+```php
+Action::fake([
+    ExampleA::class,
+]);
+
+ExampleA::dispatch(); // will skip
+ExampleB::dispatch(); // will run
+
+Action::addFake(ExampleB::class);
+
+ExampleA::dispatch(); // will skip
+ExampleB::dispatch(); // will skip
+
+Action::removeFake(ExampleA::class);
+
+ExampleA::dispatch(); // will run
+ExampleB::dispatch(); // will skip
+```
+
+### Testing → Allowing execution of actions
+
+From experience, this is a common approach. Something that Bus doesn't offer (as far as I know) is to allow for assertions against dispatched jobs but have those jobs *still run*. With actions, just simply allow execution using the following syntax:
 
 ```php
 use BradieTilley\Actions\Facades\Action;
@@ -198,7 +246,9 @@ RecordAuditLog::dispatch($user); // doesn't run
 Action::assertDispatched(RecordAuditLog::class); // pass
 ```
 
-**Events**
+### Events → Listening and monitoring action usage
+
+Often you may want to produce reporting, logging, or other event-driven workflows. This can be achieved via Laravel's event architecture.
 
 Immediately before an action is dispatched, it will trigger an event: `BradieTilley\Actions\Events\ActionDispatching`.
 
@@ -235,7 +285,7 @@ Event::listen(function (ActionDispatched $event) {
 });
 ```
 
-When an action throws a `Throwable` error/exception, it will trigger an event: `BradieTilley\Actions\Events\ActionDispatchErrored`.
+When an action throws a `Throwable` error/exception, it will trigger an event: `BradieTilley\Actions\Events\ActionFailed`.
 
 The `BradieTilley\Actions\Contracts\Actionable` class is provided in the event under the `action` property.
 
@@ -245,7 +295,7 @@ The exception (instance of `Throwable`) class is provided in the event under the
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 
-Event::listen(function (ActionDispatchErrored $event) {
+Event::listen(function (ActionFailed $event) {
     Log::channel('actions')->debug(sprintf(
         'Failed to run action %s with error %s (see sentry)',
         $event->action::class,
@@ -253,8 +303,6 @@ Event::listen(function (ActionDispatchErrored $event) {
     ));
 });
 ```
-
-
 
 ## Author
 
