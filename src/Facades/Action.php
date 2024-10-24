@@ -34,7 +34,7 @@ class Action extends Facade
     /**
      * Replace the bound instance with a fake.
      *
-     * @param class-string|array<class-string|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
+     * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
      */
     public static function fake(array|string|Closure $actionsToFake = []): FakeDispatcher
     {
@@ -57,7 +57,7 @@ class Action extends Facade
     /**
      * Define the Action class replacements to use
      *
-     * @template TClass
+     * @template TClass implements Actionable
      * @param array<class-string<TClass>, class-string<TClass>> $actions
      */
     public static function replace(array $actions): void

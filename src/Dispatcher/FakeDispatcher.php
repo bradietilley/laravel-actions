@@ -22,21 +22,21 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     /**
      * List of actions to fake
      *
-     * @var array<class-string|(Closure(Actionable): bool)>
+     * @var array<class-string<Actionable>|(Closure(Actionable $action): bool)>
      */
     protected array $actionsToFake = [];
 
     /**
      * List of actions to dispatch
      *
-     * @var array<class-string|(Closure(Actionable): bool)>
+     * @var array<class-string<Actionable>|(Closure(Actionable $action): bool)>
      */
     protected array $actionsToDispatch = [];
 
     /**
      * List of actions that have run this session
      *
-     * @var array<class-string, array<int, Actionable>>
+     * @var array<class-string<Actionable>,array<Actionable>>
      */
     protected array $actions = [];
 
@@ -46,7 +46,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     protected bool $executeActions = false;
 
     /**
-     * @param class-string|array<class-string|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
+     * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
      */
     public function __construct(
         array|string|Closure $actionsToFake,
@@ -189,7 +189,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     {
         if ($command instanceof Closure) {
             [$command, $callback] = [$this->firstClosureParameterType($command), $command];
-            /** @var class-string $command */
+            /** @var class-string<Actionable> $command */
             /** @var Closure $callback */
         }
 
@@ -214,7 +214,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
 
         if ($command instanceof Closure) {
             [$command, $callback] = [$this->firstClosureParameterType($command), $command];
-            /** @var class-string $command */
+            /** @var class-string<Actionable> $command */
             /** @var Closure $callback */
         }
 
@@ -236,7 +236,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     {
         if ($command instanceof Closure) {
             [$command, $callback] = [$this->firstClosureParameterType($command), $command];
-            /** @var class-string $command */
+            /** @var class-string<Actionable> $command */
             /** @var Closure $callback */
         }
 
