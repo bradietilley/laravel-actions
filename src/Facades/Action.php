@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Facade;
  * @method static mixed dispatch(Actionable $action)
  * @method static BradieTilley\Actions\Dispatcher\FakeDispatcher except(array|string $actionsToDispatch)
  * @method static BradieTilley\Actions\Dispatcher\FakeDispatcher removeFake(array|string $actionsToDispatch)
- * @method static BradieTilley\Actions\Dispatcher\FakeDispatcher with(array|string $actionsToFake)
  * @method static BradieTilley\Actions\Dispatcher\FakeDispatcher addFake(array|string $actionsToFake)
  * @method static void assertDispatched(string|\Closure $action, callable|int|null $callback = null)
  * @method static void assertDispatchedTimes(string|\Closure $action, int $times = 1)
