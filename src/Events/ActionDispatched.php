@@ -3,7 +3,7 @@
 namespace BradieTilley\Actions\Events;
 
 use BradieTilley\Actions\Contracts\Actionable;
-use SebastianBergmann\Timer\Duration;
+use BradieTilley\Actions\Duration;
 
 class ActionDispatched
 {

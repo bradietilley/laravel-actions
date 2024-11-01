@@ -4,6 +4,7 @@ namespace BradieTilley\Actions\Dispatcher;
 
 use BradieTilley\Actions\Contracts\Actionable;
 use BradieTilley\Actions\Contracts\Dispatcher as DispatcherContract;
+use BradieTilley\Actions\Duration;
 use BradieTilley\Actions\Events\ActionDispatched;
 use BradieTilley\Actions\Events\ActionDispatching;
 use BradieTilley\Actions\Events\ActionFailed;
@@ -11,7 +12,6 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\Pipeline;
-use SebastianBergmann\Timer\Timer;
 use Throwable;
 
 class Dispatcher implements DispatcherContract
@@ -44,9 +44,7 @@ class Dispatcher implements DispatcherContract
     public function doDispatch(Actionable $action): mixed
     {
         $this->events->dispatch(new ActionDispatching($action));
-
-        $timer = new Timer();
-        $timer->start();
+        $start = Duration::start();
 
         try {
             /** @phpstan-ignore-next-line */
@@ -57,7 +55,7 @@ class Dispatcher implements DispatcherContract
             throw $error;
         }
 
-        $duration = $timer->stop();
+        $duration = Duration::stop($start);
         $this->events->dispatch(new ActionDispatched($action, $value, $duration));
 
         return $value;
