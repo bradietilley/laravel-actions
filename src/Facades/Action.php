@@ -16,12 +16,17 @@ use Illuminate\Support\Facades\Facade;
  * @method static BradieTilley\Actions\Dispatcher\FakeDispatcher except(array|string $actionsToDispatch)
  * @method static BradieTilley\Actions\Dispatcher\FakeDispatcher removeFake(array|string $actionsToDispatch)
  * @method static BradieTilley\Actions\Dispatcher\FakeDispatcher addFake(array|string $actionsToFake)
+ * @method static BradieTilley\Actions\Dispatcher\FakeDispatcher allow(array|string $actionsToAllowExecution)
+ * @method static BradieTilley\Actions\Dispatcher\FakeDispatcher disallow(array|string $actionsToDisallowExecution)
  * @method static void assertDispatched(string|\Closure $action, callable|int|null $callback = null)
  * @method static void assertDispatchedTimes(string|\Closure $action, int $times = 1)
  * @method static void assertNotDispatched(string|\Closure $action, callable|null $callback = null)
  * @method static void assertNothingDispatched()
  * @method static \Illuminate\Support\Collection dispatched(string $action, callable|null $callback = null)
  * @method static bool hasDispatched(string $action)
+ * @method static void enableRecording()
+ * @method static void disableRecording()
+ * @method static void resetRecording()
  *
  * @method static Dispatcher|FakeDispatcher getFacadeRoot()
  *

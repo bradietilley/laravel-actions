@@ -5,11 +5,13 @@ use PHPUnit\Framework\ExpectationFailedException;
 use Workbench\App\Actions\ExampleAction;
 use Workbench\App\Actions\ExampleActionWithFakeHandler;
 
-beforeEach(function () {
-    Facade::fake();
-});
+test('the assertDispatched works with an action class name', function (bool $fake) {
+    if ($fake) {
+        Facade::fake(); // fake will enable recording
+    } else {
+        Facade::enableRecording();
+    }
 
-test('the assertDispatched works with an action class name', function () {
     ExampleActionWithFakeHandler::dispatch([]);
 
     /**
@@ -29,13 +31,26 @@ test('the assertDispatched works with an action class name', function () {
     /**
      * After re-faking the Action class, the assertion will fail
      */
-    Facade::fake();
+    if ($fake) {
+        Facade::fake();
+    } else {
+        Facade::resetRecordings();
+    }
 
     expect(fn () => Facade::assertDispatched(ExampleAction::class))
         ->toThrow(ExpectationFailedException::class);
-});
+})->with([
+    true,
+    false,
+]);
 
-test('the assertDispatched works with a callback', function () {
+test('the assertDispatched works with a callback', function (bool $fake) {
+    if ($fake) {
+        Facade::fake(); // fake will enable recording
+    } else {
+        Facade::enableRecording();
+    }
+
     ExampleActionWithFakeHandler::dispatch([]);
     $expect = [ '4' ];
 
@@ -68,9 +83,18 @@ test('the assertDispatched works with a callback', function () {
 
     expect(fn () => Facade::assertDispatched(fn (ExampleAction $action) => $action->value === $expect))
         ->toThrow(ExpectationFailedException::class);
-});
+})->with([
+    true,
+    false,
+]);
 
-test('the assertDispatched works with an action class name and callback', function () {
+test('the assertDispatched works with an action class name and callback', function (bool $fake) {
+    if ($fake) {
+        Facade::fake(); // fake will enable recording
+    } else {
+        Facade::enableRecording();
+    }
+
     ExampleActionWithFakeHandler::dispatch([]);
     $expect = [ '4' ];
 
@@ -99,13 +123,26 @@ test('the assertDispatched works with an action class name and callback', functi
     /**
      * After re-faking the Action class, the assertion will fail
      */
-    Facade::fake();
+    if ($fake) {
+        Facade::fake();
+    } else {
+        Facade::resetRecordings();
+    }
 
     expect(fn () => Facade::assertDispatched(ExampleAction::class, fn (ExampleAction $action) => $action->value === $expect))
         ->toThrow(ExpectationFailedException::class);
-});
+})->with([
+    true,
+    false,
+]);
 
-test('the assertDispatchedTimes works with an action class name', function () {
+test('the assertDispatchedTimes works with an action class name', function (bool $fake) {
+    if ($fake) {
+        Facade::fake(); // fake will enable recording
+    } else {
+        Facade::enableRecording();
+    }
+
     ExampleActionWithFakeHandler::dispatch([]);
 
     /**
@@ -151,11 +188,20 @@ test('the assertDispatchedTimes works with an action class name', function () {
     /**
      * It can also be run via the assertDispatched() method
      */
-    expect(Facade::assertDispatched(ExampleAction::class, 5))
+    expect(fn () => Facade::assertDispatched(ExampleAction::class, 5))
         ->not->toThrow(ExpectationFailedException::class);
-});
+})->with([
+    true,
+    false,
+]);
 
-test('the assertDispatchedTimes works with a callback', function () {
+test('the assertDispatchedTimes works with a callback', function (bool $fake) {
+    if ($fake) {
+        Facade::fake(); // fake will enable recording
+    } else {
+        Facade::enableRecording();
+    }
+
     ExampleActionWithFakeHandler::dispatch([]);
     $expect = ['c'];
 
@@ -208,11 +254,20 @@ test('the assertDispatchedTimes works with a callback', function () {
     /**
      * It can also be run via the assertDispatched() method
      */
-    expect(Facade::assertDispatched(fn (ExampleAction $action) => $action->value === $expect, 5))
+    expect(fn () => Facade::assertDispatched(fn (ExampleAction $action) => $action->value === $expect, 5))
         ->not->toThrow(ExpectationFailedException::class);
-});
+})->with([
+    true,
+    false,
+]);
 
-test('the assertNotDispatched works with an action class name', function () {
+test('the assertNotDispatched works with an action class name', function (bool $fake) {
+    if ($fake) {
+        Facade::fake(); // fake will enable recording
+    } else {
+        Facade::enableRecording();
+    }
+
     ExampleActionWithFakeHandler::dispatch([]);
 
     /**
@@ -221,16 +276,24 @@ test('the assertNotDispatched works with an action class name', function () {
     expect(fn () => Facade::assertNotDispatched(ExampleAction::class))
         ->not->toThrow(ExpectationFailedException::class);
 
-
     /**
      * After dispatching the action, the assertion will fail
      */
     ExampleAction::dispatch([]);
     expect(fn () => Facade::assertNotDispatched(ExampleAction::class))
         ->toThrow(ExpectationFailedException::class);
-});
+})->with([
+    true,
+    false,
+]);
 
-test('the assertNotDispatched works with a callback', function () {
+test('the assertNotDispatched works with a callback', function (bool $fake) {
+    if ($fake) {
+        Facade::fake(); // fake will enable recording
+    } else {
+        Facade::enableRecording();
+    }
+
     $expect = ['9'];
     ExampleActionWithFakeHandler::dispatch($expect);
 
@@ -253,9 +316,18 @@ test('the assertNotDispatched works with a callback', function () {
     ExampleAction::dispatch($expect);
     expect(fn () => Facade::assertNotDispatched(fn (ExampleAction $action) => $action->value === ['something']))
         ->not->toThrow(ExpectationFailedException::class);
-});
+})->with([
+    true,
+    false,
+]);
 
-test('the assertNothingDispatched works', function () {
+test('the assertNothingDispatched works', function (bool $fake) {
+    if ($fake) {
+        Facade::fake(); // fake will enable recording
+    } else {
+        Facade::enableRecording();
+    }
+
     /**
      * By default the assertion will pass
      */
@@ -269,4 +341,7 @@ test('the assertNothingDispatched works', function () {
      */
     expect(fn () => Facade::assertNothingDispatched())
         ->toThrow(ExpectationFailedException::class);
-});
+})->with([
+    true,
+    false,
+]);

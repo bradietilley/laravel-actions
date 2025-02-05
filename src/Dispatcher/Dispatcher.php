@@ -16,6 +16,8 @@ use Throwable;
 
 class Dispatcher implements DispatcherContract
 {
+    use ActionRecording;
+
     public function __construct(
         public readonly Container $container,
         public readonly EventsDispatcher $events,
@@ -28,6 +30,8 @@ class Dispatcher implements DispatcherContract
      */
     public function dispatch(Actionable $action): mixed
     {
+        $this->recordAction($action);
+
         if (empty($middleware = $action->middleware())) {
             return $this->doDispatch($action);
         }

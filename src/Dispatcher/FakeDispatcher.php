@@ -12,12 +12,10 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Testing\Fakes\Fake;
-use Illuminate\Support\Traits\ReflectsClosures;
-use PHPUnit\Framework\Assert as PHPUnit;
 
 class FakeDispatcher extends ActualDispatcher implements Fake
 {
-    use ReflectsClosures;
+    use ActionRecording;
 
     /**
      * List of actions to fake
@@ -34,11 +32,11 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     protected array $actionsToDispatch = [];
 
     /**
-     * List of actions that have run this session
+     * List of actions to allow execution even if faked
      *
-     * @var array<class-string<Actionable>,array<Actionable>>
+     * @var array<class-string<Actionable>, bool>
      */
-    protected array $actions = [];
+    protected array $actionsAllowed = [];
 
     /**
      * Flag to determine if the actions should still execute
@@ -56,6 +54,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     ) {
         parent::__construct($container, $events, $db);
         $this->actionsToFake = Arr::wrap($actionsToFake);
+        $this->enableRecording();
     }
 
     /**
@@ -124,18 +123,36 @@ class FakeDispatcher extends ActualDispatcher implements Fake
         return $this;
     }
 
+    public function allow(array|string $actions): static
+    {
+        foreach (Arr::wrap($actions) as $action) {
+            $this->actionsAllowed[$action] = true;
+        }
+
+        return $this;
+    }
+
+    public function disallow(array|string $actions): static
+    {
+        foreach (Arr::wrap($actions) as $action) {
+            $this->actionsAllowed[$action] = false;
+        }
+
+        return $this;
+    }
+
     /**
      * Dispatch the given action
      */
     public function dispatch(Actionable $action): mixed
     {
-        $this->actions[get_class($action)][] = $action;
+        $this->recordAction($action);
 
         if (! $this->shouldFakeJob($action)) {
             return parent::dispatch($action);
         }
 
-        if ($this->executeActions) {
+        if ($this->shouldHandleReal($action)) {
             return parent::dispatch($action);
         }
 
@@ -168,6 +185,27 @@ class FakeDispatcher extends ActualDispatcher implements Fake
             ->isNotEmpty();
     }
 
+    protected function shouldHandleReal(Actionable $action): bool
+    {
+        /**
+         * If this action is allowed to run
+         */
+        $explicit = $this->actionsAllowed[$action::class] ?? null;
+
+        if ($explicit !== null) {
+            return $explicit;
+        }
+
+        /**
+         * If all execution is allowed
+         */
+        if ($this->executeActions) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Determine if a command should be dispatched or not.
      */
@@ -180,106 +218,5 @@ class FakeDispatcher extends ActualDispatcher implements Fake
                     : $job === $action::class;
             })
             ->isNotEmpty();
-    }
-
-    /**
-     * Assert if a job was dispatched based on a truth-test callback.
-     */
-    public function assertDispatched(Closure|string $command, Closure|int|null $callback = null): static
-    {
-        if ($command instanceof Closure) {
-            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
-            /** @var class-string<Actionable> $command */
-            /** @var Closure $callback */
-        }
-
-        if (is_int($callback)) {
-            return $this->assertDispatchedTimes($command, $callback);
-        }
-
-        PHPUnit::assertTrue(
-            $this->dispatched($command, $callback)->count() > 0,
-            "The expected [{$command}] job was not dispatched.",
-        );
-
-        return $this;
-    }
-
-    /**
-     * Assert if a job was pushed a number of times.
-     */
-    public function assertDispatchedTimes(Closure|string $command, int $times = 1): static
-    {
-        $callback = null;
-
-        if ($command instanceof Closure) {
-            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
-            /** @var class-string<Actionable> $command */
-            /** @var Closure $callback */
-        }
-
-        $count = $this->dispatched($command, $callback)->count();
-
-        PHPUnit::assertSame(
-            $times,
-            $count,
-            "The expected [{$command}] action was dispatched {$count} times instead of {$times} times.",
-        );
-
-        return $this;
-    }
-
-    /**
-     * Determine if a job was dispatched based on a truth-test callback.
-     */
-    public function assertNotDispatched(Closure|string $command, ?Closure $callback = null): static
-    {
-        if ($command instanceof Closure) {
-            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
-            /** @var class-string<Actionable> $command */
-            /** @var Closure $callback */
-        }
-
-        PHPUnit::assertTrue(
-            $this->dispatched($command, $callback)->count() === 0,
-            "The unexpected [{$command}] action was dispatched.",
-        );
-
-        return $this;
-    }
-
-    /**
-     * Assert that no jobs were dispatched.
-     */
-    public function assertNothingDispatched(): static
-    {
-        PHPUnit::assertEmpty($this->actions, 'Actions were dispatched unexpectedly.');
-
-        return $this;
-    }
-
-    /**
-     * Get all of the jobs matching a truth-test callback.
-     *
-     * @return Collection<int, Actionable>
-     */
-    public function dispatched(string $command, ?Closure $callback = null): Collection
-    {
-        if (! $this->hasDispatched($command)) {
-            return Collection::make();
-        }
-
-        $callback = $callback ?: fn () => true;
-
-        return Collection::make($this->actions[$command])
-            ->filter(fn (Actionable $action) => $callback($action));
-    }
-
-    /**
-     * Determine if there are any stored commands for a given class.
-     */
-    public function hasDispatched(string $action): bool
-    {
-        return isset($this->actions[$action]) && ! empty($this->actions[$action]);
     }
 }
