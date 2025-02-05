@@ -35,7 +35,7 @@ class Action extends Facade
      *
      * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
      */
-    public static function fake(array|string|Closure $actionsToFake = []): FakeDispatcher
+    public static function fake(array|Closure|string $actionsToFake = []): FakeDispatcher
     {
         /** @var Application $app */
         $app = app();

@@ -22,14 +22,14 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     /**
      * List of actions to fake
      *
-     * @var array<class-string<Actionable>|(Closure(Actionable $action): bool)>
+     * @var array<class-string<Actionable>|(Closure(Actionable): bool)>
      */
     protected array $actionsToFake = [];
 
     /**
      * List of actions to dispatch
      *
-     * @var array<class-string<Actionable>|(Closure(Actionable $action): bool)>
+     * @var array<class-string<Actionable>|(Closure(Actionable): bool)>
      */
     protected array $actionsToDispatch = [];
 
@@ -49,7 +49,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
      * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
      */
     public function __construct(
-        array|string|Closure $actionsToFake,
+        array|Closure|string $actionsToFake,
         Container $container,
         EventDispatcher $events,
         DatabaseManager $db,
@@ -63,7 +63,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
      *
      * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
      */
-    public function addFake(array|string|Closure $actionsToFake): static
+    public function addFake(array|Closure|string $actionsToFake): static
     {
         return $this->with($actionsToFake);
     }
@@ -73,7 +73,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
      *
      * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToFake
      */
-    public function with(array|string|Closure $actionsToFake): static
+    public function with(array|Closure|string $actionsToFake): static
     {
         $this->actionsToFake = array_merge($this->actionsToFake, Arr::wrap($actionsToFake));
 
@@ -85,7 +85,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
      *
      * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToDispatch
      */
-    public function removeFake(array|string|Closure $actionsToDispatch): static
+    public function removeFake(array|Closure|string $actionsToDispatch): static
     {
         return $this->except($actionsToDispatch);
     }
@@ -95,7 +95,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
      *
      * @param class-string<Actionable>|array<class-string<Actionable>|(Closure(Actionable $action): bool)>|(Closure(Actionable $action): bool) $actionsToDispatch
      */
-    public function except(array|string|Closure $actionsToDispatch): static
+    public function except(array|Closure|string $actionsToDispatch): static
     {
         $this->actionsToDispatch = array_merge($this->actionsToDispatch, Arr::wrap($actionsToDispatch));
 
@@ -185,7 +185,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     /**
      * Assert if a job was dispatched based on a truth-test callback.
      */
-    public function assertDispatched(string|Closure $command, Closure|int|null $callback = null): static
+    public function assertDispatched(Closure|string $command, Closure|int|null $callback = null): static
     {
         if ($command instanceof Closure) {
             [$command, $callback] = [$this->firstClosureParameterType($command), $command];
@@ -208,7 +208,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     /**
      * Assert if a job was pushed a number of times.
      */
-    public function assertDispatchedTimes(string|Closure $command, int $times = 1): static
+    public function assertDispatchedTimes(Closure|string $command, int $times = 1): static
     {
         $callback = null;
 
@@ -232,7 +232,7 @@ class FakeDispatcher extends ActualDispatcher implements Fake
     /**
      * Determine if a job was dispatched based on a truth-test callback.
      */
-    public function assertNotDispatched(string|Closure $command, Closure $callback = null): static
+    public function assertNotDispatched(Closure|string $command, ?Closure $callback = null): static
     {
         if ($command instanceof Closure) {
             [$command, $callback] = [$this->firstClosureParameterType($command), $command];

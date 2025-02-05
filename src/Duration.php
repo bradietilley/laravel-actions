@@ -66,8 +66,8 @@ class Duration implements Stringable
 
         $format = '';
 
-        $format .= $hours > 0 ? sprintf('%02d', $hours) . ':' : '';
-        $format .= sprintf('%02d', $minutes) . ':';
+        $format .= $hours > 0 ? sprintf('%02d', $hours).':' : '';
+        $format .= sprintf('%02d', $minutes).':';
         $format .= sprintf('%02d', $seconds);
 
         return $format;
